@@ -1,0 +1,6 @@
+demo_module.admin:
+  title: 'Demo module settings'
+  description: 'This is explain to set menu page in the admin area'
+  parent: system.admin_config_development
+  route_name: demo_module.list
+  weight: 100

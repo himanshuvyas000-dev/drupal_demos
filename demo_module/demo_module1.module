@@ -1,0 +1,5 @@
+<?php 
+function demo_module_page_attachments(array &$page) {
+    $page['#attached']['library'][] = 'demo_module/demo_module_css'; 
+}
+?>

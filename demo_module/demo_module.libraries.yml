@@ -1,0 +1,22 @@
+demo_module:
+  version: 1.0
+  css:
+    theme:
+      css/demo_module.css: {}
+# bootstrap-cdn:  
+#   css:
+#     theme:
+#       'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css':
+#         type: external
+#         minified: true
+#         attributes:
+#           crossorigin: anonymous
+#           integrity: "sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+#   js:
+#     'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js': {}
+# global-scripts:
+#   js:
+#     version: 1.x
+#     assets/js/custom.js: {}
+#   dependencies:
+#     - core/jquery        

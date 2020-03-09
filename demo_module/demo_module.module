@@ -1,0 +1,84 @@
+<?php 
+
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Url;
+
+/**
+* Implements hook_page_attachments().
+*/
+function demo_module_page_attachments(array &$attachments) {
+  	$attachments['#attached']['library'][] = 'demo_module/demo_module';
+}
+
+function demo_module_mail_alter(&$message) {
+
+	$message['body'][0] = Markup::create($message['body'][0]);
+}
+
+function demo_module_mail($key, &$message, $params) {
+    $options = [
+      	'langcode' => $message['langcode']
+    ];
+    if ($key == "demo_module_form") {
+	  	$message['headers']['Content-Type'] = 'text/html; charset=UTF-8;';
+	  	$message['subject'] = 'Contact Form Submission';
+	  	$message['body'][] = $params['message'];
+		$message['html'] = true;
+	}
+      
+}
+
+/**
+ * @file
+ * Contains dn_students.module.
+*/ 
+function get_search_details($opt,$firstname,$lastname,$email,$header) {
+
+	$res = array();
+	if($opt == "All"){
+
+		$results = db_select('contact_form', 'cf')
+		->extend('Drupal\Core\Database\Query\TableSortExtender')
+		->extend('\Drupal\Core\Database\Query\PagerSelectExtender')
+		->orderByHeader($header)
+		->limit(15);
+		$results->fields('cf');
+		$results->orderBy('cf.id','DESC');
+		$res = $results->execute()->fetchAll();
+		$return_res = [];
+
+	}else{
+
+		$results = db_select('contact_form', 'cf')
+		->extend('Drupal\Core\Database\Query\TableSortExtender')
+		->extend('\Drupal\Core\Database\Query\PagerSelectExtender')
+		->orderByHeader($header)
+		->limit(15);
+		$results->fields('cf');
+  		$results->condition('firstname', "%" . $firstname . "%", 'LIKE');
+  		$results->condition('lastname', "%" . $lastname . "%", 'LIKE');
+  		$results->condition('email', "%" . $email . "%", 'LIKE');
+		$res = $results->execute()->fetchAll();
+		$return_res = [];
+
+	}
+    foreach ($res as $row) {
+ 
+      	$delete = Url::fromUserInput('/admin/config/demo_module/form/delete/' . $row->id);
+		$edit = Url::fromUserInput('/admin/config/demo_module/edit/?id='.$row->id );
+		$edit_link = \Drupal::l('edit', $edit);
+        $delete_link = \Drupal::l('delete', $delete);
+ 		$mainLink = t('@linkApprove  @linkReject', array('@linkApprove' => $edit_link, '@linkReject' => $delete_link));
+      
+    	$return_res[] = [
+	        'id' => $row->id,
+	        'firstname' => $row->firstname,
+			'lastname' => $row->lastname,
+			'email' => $row->email,
+			'edit' => $mainLink 
+      	];
+    }
+    return $return_res;
+}
+
+?>
